@@ -11,7 +11,7 @@ import (
 
 type TransactionService interface {
 	InsertTransaction(b dto.TransactionCreateDTO) entity.Transaction
-	All() []entity.Transaction
+	All(idUser string) []entity.Transaction
 }
 
 type transactionService struct {
@@ -34,6 +34,6 @@ func (service *transactionService) InsertTransaction(b dto.TransactionCreateDTO)
 	return res
 }
 
-func (service *transactionService) All() []entity.Transaction {
-	return service.transactionRepository.All()
+func (service *transactionService) All(idUser string) []entity.Transaction {
+	return service.transactionRepository.All(idUser)
 }

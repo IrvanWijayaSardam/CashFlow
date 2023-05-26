@@ -7,7 +7,7 @@ import (
 
 type TransactionRepository interface {
 	InsertTransaction(b *entity.Transaction) entity.Transaction
-	All() []entity.Transaction
+	All(idUser string) []entity.Transaction
 }
 
 type transactionConnection struct {
@@ -26,8 +26,8 @@ func (db *transactionConnection) InsertTransaction(b *entity.Transaction) entity
 	return *b
 }
 
-func (db *transactionConnection) All() []entity.Transaction {
+func (db *transactionConnection) All(idUser string) []entity.Transaction {
 	var transactions []entity.Transaction
-	db.connection.Preload("UserID").Find(&transactions)
+	db.connection.Preload("User").Where("user_id = ?", idUser).Find(&transactions)
 	return transactions
 }

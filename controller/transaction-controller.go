@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/IrvanWijayaSardam/CashFlow/dto"
-	"github.com/IrvanWijayaSardam/CashFlow/entity"
 	"github.com/IrvanWijayaSardam/CashFlow/helper"
 	"github.com/IrvanWijayaSardam/CashFlow/service"
 	"github.com/dgrijalva/jwt-go"
@@ -31,7 +30,9 @@ func NewTransactionController(trxServ service.TransactionService, jwtServ servic
 }
 
 func (c *transactionController) All(context *gin.Context) {
-	var trx []entity.Transaction = c.transactionService.All()
+	authHeader := context.GetHeader("Authorization")
+	userID := c.getUserIDByToken(authHeader)
+	trx := c.transactionService.All(userID)
 	res := helper.BuildResponse(true, "OK!", []interface{}{trx})
 	context.JSON(http.StatusOK, res)
 }
