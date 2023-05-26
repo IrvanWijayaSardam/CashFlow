@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/IrvanWijayaSardam/CashFlow/config"
 	"github.com/IrvanWijayaSardam/CashFlow/controller"
+	"github.com/IrvanWijayaSardam/CashFlow/middleware"
 	"github.com/IrvanWijayaSardam/CashFlow/repository"
 	"github.com/IrvanWijayaSardam/CashFlow/service"
 	"github.com/gin-gonic/gin"
@@ -10,11 +11,14 @@ import (
 )
 
 var (
-	db             *gorm.DB                  = config.SetupDatabaseConnection()
-	userRepository repository.UserRepository = repository.NewUserRepository(db)
-	jwtService     service.JWTService        = service.NewJWTService()
-	authService    service.AuthService       = service.NewAuthService(userRepository)
-	authController controller.AuthController = controller.NewAuthController(authService, jwtService)
+	db             *gorm.DB                         = config.SetupDatabaseConnection()
+	userRepository repository.UserRepository        = repository.NewUserRepository(db)
+	trxRepository  repository.TransactionRepository = repository.NewTransactionRepository(db)
+	jwtService     service.JWTService               = service.NewJWTService()
+	authService    service.AuthService              = service.NewAuthService(userRepository)
+	authController controller.AuthController        = controller.NewAuthController(authService, jwtService)
+	trxSertvice    service.TransactionService       = service.NewTransactionService(trxRepository)
+	trxController  controller.TransactionContoller  = controller.NewTransactionController(trxSertvice, jwtService)
 )
 
 func main() {
@@ -25,6 +29,12 @@ func main() {
 	{
 		authRoutes.POST("/login", authController.Login)
 		authRoutes.POST("/register", authController.Register)
+	}
+
+	trxRoutes := r.Group("api/transaction", middleware.AuthorizeJWT(jwtService))
+	{
+		trxRoutes.GET("/", trxController.All)
+		trxRoutes.POST("/", trxController.Insert)
 	}
 
 	// userRoutes := r.Group("api/user", middleware.AuthorizeJWT(jwtService))
