@@ -7,7 +7,10 @@ import (
 
 type TransactionRepository interface {
 	InsertTransaction(b *entity.Transaction) entity.Transaction
+	UpdateTransaction(b *entity.Transaction) entity.Transaction
 	All(idUser string) []entity.Transaction
+	DeleteTransaction(b *entity.Transaction)
+	FindTransactionById(UserID uint64) entity.Transaction
 }
 
 type transactionConnection struct {
@@ -30,4 +33,20 @@ func (db *transactionConnection) All(idUser string) []entity.Transaction {
 	var transactions []entity.Transaction
 	db.connection.Preload("User").Where("user_id = ?", idUser).Find(&transactions)
 	return transactions
+}
+
+func (db *transactionConnection) UpdateTransaction(b *entity.Transaction) entity.Transaction {
+	db.connection.Save(&b)
+	db.connection.Preload("User").Find(&b)
+	return *b
+}
+
+func (db *transactionConnection) DeleteTransaction(b *entity.Transaction) {
+	db.connection.Delete(&b)
+}
+
+func (db *transactionConnection) FindTransactionById(UserID uint64) entity.Transaction {
+	var transaction entity.Transaction
+	db.connection.Preload("User").Find(&transaction, UserID)
+	return transaction
 }

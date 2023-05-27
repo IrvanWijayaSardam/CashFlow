@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/IrvanWijayaSardam/CashFlow/dto"
+	"github.com/IrvanWijayaSardam/CashFlow/entity"
 	"github.com/IrvanWijayaSardam/CashFlow/helper"
 	"github.com/IrvanWijayaSardam/CashFlow/service"
 	"github.com/dgrijalva/jwt-go"
@@ -15,6 +16,8 @@ import (
 type TransactionContoller interface {
 	All(context *gin.Context)
 	Insert(context *gin.Context)
+	Update(context *gin.Context)
+	Delete(context *gin.Context)
 }
 
 type transactionController struct {
@@ -56,6 +59,35 @@ func (c *transactionController) Insert(context *gin.Context) {
 	}
 }
 
+func (c *transactionController) Update(context *gin.Context) {
+	var transactionUpdateDTO dto.TransactionUpdateDTO
+	errDTO := context.ShouldBind(&transactionUpdateDTO)
+	if errDTO != nil {
+		res := helper.BuildErrorResponse("Failed to process request", errDTO.Error(), helper.EmptyObj{})
+		context.JSON(http.StatusBadRequest, res)
+		return
+	}
+	authHeader := context.GetHeader("Authorization")
+	token, errToken := c.jwtService.ValidateToken(authHeader)
+	if errToken != nil {
+		panic(errToken.Error())
+	}
+	claims := token.Claims.(jwt.MapClaims)
+	userID := fmt.Sprintf("%v", claims["userid"])
+	if c.transactionService.IsAllowedToEdit(userID, transactionUpdateDTO.ID) {
+		id, errID := strconv.ParseUint(userID, 10, 64)
+		if errID == nil {
+			transactionUpdateDTO.UserID = id
+		}
+		result := c.transactionService.UpdateTransaction(transactionUpdateDTO)
+		response := helper.BuildResponse(true, "OK!", result)
+		context.JSON(http.StatusOK, response)
+	} else {
+		response := helper.BuildErrorResponse("You dont have permission", "You are not the owner", helper.EmptyObj{})
+		context.JSON(http.StatusForbidden, response)
+	}
+}
+
 func (c *transactionController) getUserIDByToken(token string) string {
 	aToken, err := c.jwtService.ValidateToken(token)
 	if err != nil {
@@ -64,4 +96,29 @@ func (c *transactionController) getUserIDByToken(token string) string {
 	claims := aToken.Claims.(jwt.MapClaims)
 	id := fmt.Sprintf("%v", claims["userid"])
 	return id
+}
+
+func (c *transactionController) Delete(context *gin.Context) {
+	var transaction entity.Transaction
+	id, err := strconv.ParseUint(context.Param("id"), 0, 0)
+	if err != nil {
+		response := helper.BuildErrorResponse("Failed to get id", "No param id were found", helper.EmptyObj{})
+		context.JSON(http.StatusBadRequest, response)
+	}
+	transaction.ID = id
+	authHeader := context.GetHeader("Authorization")
+	token, errToken := c.jwtService.ValidateToken(authHeader)
+	if errToken != nil {
+		panic(errToken.Error())
+	}
+	claims := token.Claims.(jwt.MapClaims)
+	userID := fmt.Sprintf("%v", claims["userid"])
+	if c.transactionService.IsAllowedToEdit(userID, transaction.ID) {
+		c.transactionService.Delete(transaction)
+		res := helper.BuildResponse(true, "Deleted", helper.EmptyObj{})
+		context.JSON(http.StatusOK, res)
+	} else {
+		response := helper.BuildErrorResponse("You dont have permission", "You are not the owner", helper.EmptyObj{})
+		context.JSON(http.StatusForbidden, response)
+	}
 }

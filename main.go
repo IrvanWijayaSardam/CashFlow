@@ -35,6 +35,8 @@ func main() {
 	{
 		trxRoutes.GET("/", trxController.All)
 		trxRoutes.POST("/", trxController.Insert)
+		trxRoutes.PUT("/", trxController.Update)
+		trxRoutes.DELETE("/:id", trxController.Delete)
 	}
 
 	// userRoutes := r.Group("api/user", middleware.AuthorizeJWT(jwtService))
