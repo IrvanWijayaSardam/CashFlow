@@ -33,7 +33,7 @@ func (c *transactionController) All(context *gin.Context) {
 	authHeader := context.GetHeader("Authorization")
 	userID := c.getUserIDByToken(authHeader)
 	trx := c.transactionService.All(userID)
-	res := helper.BuildResponse(true, "OK!", []interface{}{trx})
+	res := helper.BuildResponse(true, "OK!", trx)
 	context.JSON(http.StatusOK, res)
 }
 
@@ -41,7 +41,7 @@ func (c *transactionController) Insert(context *gin.Context) {
 	var transactionCreateDTO dto.TransactionCreateDTO
 	errDTO := context.ShouldBind(&transactionCreateDTO)
 	if errDTO != nil {
-		res := helper.BuildErrorResponse("Failed to process request", errDTO.Error(), []interface{}{helper.EmptyObj{}})
+		res := helper.BuildErrorResponse("Failed to process request", errDTO.Error(), helper.EmptyObj{})
 		context.JSON(http.StatusBadRequest, res)
 	} else {
 		authHeader := context.GetHeader("Authorization")
@@ -51,7 +51,7 @@ func (c *transactionController) Insert(context *gin.Context) {
 			transactionCreateDTO.UserID = convertedUserID
 		}
 		result := c.transactionService.InsertTransaction(transactionCreateDTO)
-		response := helper.BuildResponse(true, "OK!", []interface{}{result})
+		response := helper.BuildResponse(true, "OK!", result)
 		context.JSON(http.StatusCreated, response)
 	}
 }
