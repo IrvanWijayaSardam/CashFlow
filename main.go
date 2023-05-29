@@ -15,8 +15,10 @@ var (
 	userRepository repository.UserRepository        = repository.NewUserRepository(db)
 	trxRepository  repository.TransactionRepository = repository.NewTransactionRepository(db)
 	jwtService     service.JWTService               = service.NewJWTService()
+	userService    service.UserService              = service.NewUserService(userRepository)
 	authService    service.AuthService              = service.NewAuthService(userRepository)
 	authController controller.AuthController        = controller.NewAuthController(authService, jwtService)
+	userController controller.UserController        = controller.NewUserController(userService, jwtService)
 	trxSertvice    service.TransactionService       = service.NewTransactionService(trxRepository)
 	trxController  controller.TransactionContoller  = controller.NewTransactionController(trxSertvice, jwtService)
 )
@@ -39,6 +41,11 @@ func main() {
 		trxRoutes.DELETE("/:id", trxController.Delete)
 	}
 
+	userRoutes := r.Group("api/user", middleware.AuthorizeJWT(jwtService))
+	{
+		userRoutes.GET("/profile", userController.Profile)
+		userRoutes.PUT("/profile", userController.Update)
+	}
 	// userRoutes := r.Group("api/user", middleware.AuthorizeJWT(jwtService))
 	// {
 	// 	userRoutes.GET("/profile", userController.Profile)

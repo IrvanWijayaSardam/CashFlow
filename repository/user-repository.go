@@ -69,7 +69,7 @@ func (db *userConnection) FindByEmail(email string) entity.User {
 
 func (db *userConnection) ProfileUser(userID string) entity.User {
 	var user entity.User
-	db.connection.Preload("Notes").Preload("Notes.User").Find(&user, userID)
+	db.connection.Find(&user, userID)
 	return user
 }
 
