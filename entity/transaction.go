@@ -7,4 +7,5 @@ type Transaction struct {
 	Description      string `json:"description"`
 	Date             string `json:"date"`
 	TransactionValue int    `json:"transaction_value"`
+	TransactionGroup string `json:"transaction_group"`
 }

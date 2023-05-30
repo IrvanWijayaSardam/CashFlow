@@ -11,6 +11,11 @@ type Response struct {
 	Data    interface{} `json:"data"`
 }
 
+type TransactionGroupSum struct {
+	TransactionGroup string `json:"transaction_group"`
+	TotalTransaction int    `json:"total_transaction"`
+}
+
 type EmptyObj struct{}
 
 func BuildResponse(status bool, message string, data interface{}) Response {

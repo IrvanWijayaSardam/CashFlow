@@ -15,6 +15,7 @@ import (
 
 type TransactionContoller interface {
 	All(context *gin.Context)
+	SumGroupId(context *gin.Context)
 	Insert(context *gin.Context)
 	Update(context *gin.Context)
 	Delete(context *gin.Context)
@@ -36,6 +37,15 @@ func (c *transactionController) All(context *gin.Context) {
 	authHeader := context.GetHeader("Authorization")
 	userID := c.getUserIDByToken(authHeader)
 	trx := c.transactionService.All(userID)
+	res := helper.BuildResponse(true, "OK!", trx)
+	context.JSON(http.StatusOK, res)
+}
+
+func (c *transactionController) SumGroupId(context *gin.Context) {
+	authHeader := context.GetHeader("Authorization")
+	userID := c.getUserIDByToken(authHeader)
+	groupId := context.GetHeader("GroupID")
+	trx := c.transactionService.SumGroupId(userID, groupId)
 	res := helper.BuildResponse(true, "OK!", trx)
 	context.JSON(http.StatusOK, res)
 }

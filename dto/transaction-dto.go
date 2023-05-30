@@ -6,6 +6,7 @@ type TransactionCreateDTO struct {
 	Date             string `json:"date" form:"date" binding:"required"`
 	Description      string `json:"description" form:"description" binding:"required"`
 	TransactionValue int    `json:"trxvalue" form:"trxvalue" binding:"required"`
+	TransactionGroup string `json:"trxgroup" form:"trxgroup" binding:"required"`
 }
 
 type TransactionUpdateDTO struct {
@@ -15,4 +16,5 @@ type TransactionUpdateDTO struct {
 	Date             string `json:"date" form:"date" binding:"required"`
 	Description      string `json:"description" form:"description" binding:"required"`
 	TransactionValue int    `json:"trxvalue" form:"trxvalue" binding:"required"`
+	TransactionGroup string `json:"trxgroup" form:"trxgroup" binding:"required"`
 }

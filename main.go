@@ -41,6 +41,11 @@ func main() {
 		trxRoutes.DELETE("/:id", trxController.Delete)
 	}
 
+	reportRoutes := r.Group("api/report", middleware.AuthorizeJWT(jwtService))
+	{
+		reportRoutes.GET("/", trxController.SumGroupId)
+	}
+
 	userRoutes := r.Group("api/user", middleware.AuthorizeJWT(jwtService))
 	{
 		userRoutes.GET("/profile", userController.Profile)

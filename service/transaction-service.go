@@ -16,10 +16,16 @@ type TransactionService interface {
 	Delete(b entity.Transaction)
 	IsAllowedToEdit(userID string, transactionID uint64) bool
 	All(idUser string) []entity.Transaction
+	SumGroupId(idUser string, idGroup string) int
 }
 
 type transactionService struct {
 	transactionRepository repository.TransactionRepository
+}
+
+// SumGroupId implements TransactionService
+func (service *transactionService) SumGroupId(idUser string, idGroup string) int {
+	return service.transactionRepository.SumGroupId(idUser, idGroup)
 }
 
 func NewTransactionService(transactionRepo repository.TransactionRepository) TransactionService {
