@@ -6,6 +6,7 @@ import (
 
 	"github.com/IrvanWijayaSardam/CashFlow/dto"
 	"github.com/IrvanWijayaSardam/CashFlow/entity"
+	"github.com/IrvanWijayaSardam/CashFlow/helper"
 	"github.com/IrvanWijayaSardam/CashFlow/repository"
 	"github.com/mashingan/smapping"
 )
@@ -16,7 +17,7 @@ type TransactionService interface {
 	Delete(b entity.Transaction)
 	IsAllowedToEdit(userID string, transactionID uint64) bool
 	All(idUser string) []entity.Transaction
-	SumGroupId(idUser string, idGroup string) int
+	SumGroupId(idUser string) []helper.TransactionGroupSum
 }
 
 type transactionService struct {
@@ -24,8 +25,8 @@ type transactionService struct {
 }
 
 // SumGroupId implements TransactionService
-func (service *transactionService) SumGroupId(idUser string, idGroup string) int {
-	return service.transactionRepository.SumGroupId(idUser, idGroup)
+func (service *transactionService) SumGroupId(idUser string) []helper.TransactionGroupSum {
+	return service.transactionRepository.SumGroupId(idUser)
 }
 
 func NewTransactionService(transactionRepo repository.TransactionRepository) TransactionService {

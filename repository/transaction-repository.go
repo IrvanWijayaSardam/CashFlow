@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/IrvanWijayaSardam/CashFlow/entity"
+	"github.com/IrvanWijayaSardam/CashFlow/helper"
 
 	"gorm.io/gorm"
 )
@@ -10,7 +11,7 @@ type TransactionRepository interface {
 	InsertTransaction(b *entity.Transaction) entity.Transaction
 	UpdateTransaction(b *entity.Transaction) entity.Transaction
 	All(idUser string) []entity.Transaction
-	SumGroupId(idUser string, idGroup string) int
+	SumGroupId(idUser string) []helper.TransactionGroupSum
 	DeleteTransaction(b *entity.Transaction)
 	FindTransactionById(UserID uint64) entity.Transaction
 }
@@ -37,11 +38,12 @@ func (db *transactionConnection) All(idUser string) []entity.Transaction {
 	return transactions
 }
 
-func (db *transactionConnection) SumGroupId(idUser string, groupId string) int {
-	var result int
+func (db *transactionConnection) SumGroupId(idUser string) []helper.TransactionGroupSum {
+	var result []helper.TransactionGroupSum
 	db.connection.Model(&entity.Transaction{}).
-		Select("SUM(transaction_value)").
-		Where("user_id = ? AND transaction_group = ?", idUser, groupId).
+		Select("transaction_group, SUM(transaction_value) AS total_transaction").
+		Where("user_id = ?", idUser).
+		Group("transaction_group").
 		Scan(&result)
 	return result
 }
