@@ -44,6 +44,7 @@ func main() {
 	reportRoutes := r.Group("api/report", middleware.AuthorizeJWT(jwtService))
 	{
 		reportRoutes.GET("/", trxController.SumGroupId)
+		reportRoutes.GET("/summary", trxController.TransactionReport)
 	}
 
 	userRoutes := r.Group("api/user", middleware.AuthorizeJWT(jwtService))

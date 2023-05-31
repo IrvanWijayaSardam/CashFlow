@@ -18,10 +18,16 @@ type TransactionService interface {
 	IsAllowedToEdit(userID string, transactionID uint64) bool
 	All(idUser string) []entity.Transaction
 	SumGroupId(idUser string) []helper.TransactionGroupSum
+	TransactionReport(idUser string) helper.TransactionReport
 }
 
 type transactionService struct {
 	transactionRepository repository.TransactionRepository
+}
+
+// TransactionReport implements TransactionService
+func (service *transactionService) TransactionReport(idUser string) helper.TransactionReport {
+	return service.transactionRepository.TransactionReport(idUser)
 }
 
 // SumGroupId implements TransactionService

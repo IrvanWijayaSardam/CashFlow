@@ -12,6 +12,7 @@ type TransactionRepository interface {
 	UpdateTransaction(b *entity.Transaction) entity.Transaction
 	All(idUser string) []entity.Transaction
 	SumGroupId(idUser string) []helper.TransactionGroupSum
+	TransactionReport(idUser string) helper.TransactionReport
 	DeleteTransaction(b *entity.Transaction)
 	FindTransactionById(UserID uint64) entity.Transaction
 }
@@ -45,6 +46,18 @@ func (db *transactionConnection) SumGroupId(idUser string) []helper.TransactionG
 		Where("user_id = ?", idUser).
 		Group("transaction_group").
 		Scan(&result)
+	return result
+}
+
+func (db *transactionConnection) TransactionReport(idUser string) helper.TransactionReport {
+	var result helper.TransactionReport
+
+	db.connection.Model(&entity.Transaction{}).
+		Select("SUM(CASE WHEN transaction_type = '1' THEN transaction_value ELSE 0 END) AS transaction_in, "+
+			"SUM(CASE WHEN transaction_type = '2' THEN transaction_value ELSE 0 END) AS transaction_out").
+		Where("user_id = ?", idUser).
+		Scan(&result)
+
 	return result
 }
 

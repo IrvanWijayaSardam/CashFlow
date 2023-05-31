@@ -16,6 +16,11 @@ type TransactionGroupSum struct {
 	TotalTransaction int    `json:"total_transaction"`
 }
 
+type TransactionReport struct {
+	TransactionOut int `json:"transaction_out"`
+	TransactionIn  int `json:"total_in"`
+}
+
 type EmptyObj struct{}
 
 func BuildResponse(status bool, message string, data interface{}) Response {
