@@ -57,8 +57,10 @@ func (service *userService) SaveFile(file *multipart.FileHeader) (string, error)
 	}
 	defer src.Close()
 
-	// Create the cdn directory if it doesn't exist
-	err = os.MkdirAll("cdn", 0755)
+	cdnDir := "cdn" // Specify the desired directory name
+
+	// Create the cdn directory if it doesn't exist in the current working directory
+	err = os.MkdirAll(cdnDir, 0755)
 	if err != nil {
 		return "", err
 	}
@@ -66,7 +68,7 @@ func (service *userService) SaveFile(file *multipart.FileHeader) (string, error)
 	// Generate a random file name using UUID and append the original file extension
 	fileExt := filepath.Ext(file.Filename)
 	fileName := uuid.New().String() + fileExt
-	filePath := fileName
+	filePath := filepath.Join(cdnDir, fileName)
 
 	dst, err := os.Create(filePath)
 	if err != nil {
