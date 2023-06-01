@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/gin-gonic/gin v1.8.1 // indirect
+	github.com/google/uuid v1.3.0
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/mashingan/smapping v0.1.19 // indirect

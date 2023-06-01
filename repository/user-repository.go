@@ -15,6 +15,7 @@ type UserRepository interface {
 	IsDuplicateEmail(email string) (tx *gorm.DB)
 	FindByEmail(email string) entity.User
 	ProfileUser(userId string) entity.User
+	UpdateUserProfile(userId uint64, filePath string) error
 }
 
 type userConnection struct {
@@ -71,6 +72,23 @@ func (db *userConnection) ProfileUser(userID string) entity.User {
 	var user entity.User
 	db.connection.Find(&user, userID)
 	return user
+}
+
+func (db *userConnection) UpdateUserProfile(userID uint64, profile string) error {
+	var user entity.User
+	result := db.connection.First(&user, userID)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	user.Profile = profile
+
+	result = db.connection.Save(&user)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }
 
 func hashAndSalt(pwd []byte) string {
