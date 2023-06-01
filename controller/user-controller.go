@@ -105,7 +105,7 @@ func (c *userController) SaveFile(context *gin.Context) {
 		return
 	}
 
-	res := helper.BuildResponse(true, "OK!", "Image Successfully Updated!")
+	res := helper.BuildResponse(true, "OK!", filePath)
 	context.JSON(http.StatusOK, res)
 }
 
