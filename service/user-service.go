@@ -82,7 +82,7 @@ func (service *userService) SaveFile(file *multipart.FileHeader) (string, error)
 }
 
 func (service *userService) GetFile(fileName string) ([]byte, error) {
-	filePath := "D:/Irvan/Programming/GoLang/CashFlow/cdn/" + fileName // Update the file path
+	filePath := "./cdn" + fileName // Update the file path
 
 	file, err := os.Open(filePath)
 	if err != nil {
