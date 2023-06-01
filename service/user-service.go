@@ -66,7 +66,7 @@ func (service *userService) SaveFile(file *multipart.FileHeader) (string, error)
 	// Generate a random file name using UUID and append the original file extension
 	fileExt := filepath.Ext(file.Filename)
 	fileName := uuid.New().String() + fileExt
-	filePath := "./cdn/" + fileName
+	filePath := fileName
 
 	dst, err := os.Create(filePath)
 	if err != nil {
