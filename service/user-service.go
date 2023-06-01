@@ -58,7 +58,7 @@ func (service *userService) SaveFile(file *multipart.FileHeader) (string, error)
 	defer src.Close()
 
 	// Create the cdn directory if it doesn't exist
-	err = os.MkdirAll("./cdn", 0755)
+	err = os.MkdirAll("cdn", 0755)
 	if err != nil {
 		return "", err
 	}
@@ -83,7 +83,7 @@ func (service *userService) SaveFile(file *multipart.FileHeader) (string, error)
 }
 
 func (service *userService) GetFile(fileName string) ([]byte, error) {
-	filePath := "./cdn" + fileName // Update the file path
+	filePath := "cdn" + fileName // Update the file path
 
 	file, err := os.Open(filePath)
 	if err != nil {
