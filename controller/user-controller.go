@@ -91,14 +91,13 @@ func (c *userController) SaveFile(context *gin.Context) {
 		return
 	}
 
-	filePath, err := c.userService.SaveFile(file)
 	if err != nil {
 		res := helper.BuildErrorResponse("Failed to process request", err.Error(), helper.EmptyObj{})
 		context.AbortWithStatusJSON(http.StatusInternalServerError, res)
 		return
 	}
 
-	err = c.userService.UpdateUserProfile(id, filePath)
+	err = c.userService.UpdateUserProfile(id, file.Filename)
 	if err != nil {
 		res := helper.BuildErrorResponse("Failed to process request", err.Error(), helper.EmptyObj{})
 		context.AbortWithStatusJSON(http.StatusInternalServerError, res)
