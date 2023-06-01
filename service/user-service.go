@@ -81,7 +81,7 @@ func (service *userService) SaveFile(file *multipart.FileHeader) (string, error)
 		return "", err
 	}
 
-	return filePath, nil
+	return fileName, nil
 }
 
 func (service *userService) GetFile(fileName string) ([]byte, error) {
