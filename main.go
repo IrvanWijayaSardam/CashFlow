@@ -87,5 +87,5 @@ func main() {
 	// 	pagerStatusRoutes.GET("/:id", pagerController.FindStatusById)
 	// }
 
-	r.Run(":8001")
+	r.Run(":3000")
 }
