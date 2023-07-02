@@ -54,10 +54,10 @@ func main() {
 		userRoutes.POST("/picture", userController.SaveFile)
 	}
 
-	cdnRoutes := r.Group("api/cdn")
-	{
-		cdnRoutes.GET("/picture/:file_name", userController.GetFile)
-	}
+	// cdnRoutes := r.Group("api/cdn")
+	// {
+	// 	cdnRoutes.GET("/picture/:file_name", userController.GetFile)
+	// }
 	// userRoutes := r.Group("api/user", middleware.AuthorizeJWT(jwtService))
 	// {
 	// 	userRoutes.GET("/profile", userController.Profile)
