@@ -26,6 +26,7 @@ var (
 func main() {
 	defer config.CloseDatabaseConnection(db)
 	r := gin.Default()
+	gin.SetMode(gin.ReleaseMode)
 
 	authRoutes := r.Group("api/auth")
 	{

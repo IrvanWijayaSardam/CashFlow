@@ -18,7 +18,7 @@ type UserService interface {
 	Update(user dto.UserUpdateDTO) entity.User
 	Profile(userID string) entity.User
 	SaveFile(file *multipart.FileHeader) (string, error)
-	UpdateUserProfile(userID uint64, filepath string) error
+	// UpdateUserProfile(userID uint64, filepath string) error
 	GetFile(fileName string) ([]byte, error)
 }
 

@@ -17,7 +17,7 @@ import (
 type UserController interface {
 	Update(context *gin.Context)
 	Profile(context *gin.Context)
-	SaveFile(context *gin.Context)
+	// SaveFile(context *gin.Context)
 	GetFile(context *gin.Context)
 }
 
@@ -71,43 +71,43 @@ func (c *userController) Profile(context *gin.Context) {
 
 }
 
-func (c *userController) SaveFile(context *gin.Context) {
-	authHeader := context.GetHeader("Authorization")
-	token, err := c.jwtService.ValidateToken(authHeader)
-	if err != nil {
-		panic(err.Error())
-	}
-	claims := token.Claims.(jwt.MapClaims)
-	id, err := strconv.ParseUint(fmt.Sprintf("%v", claims["userid"]), 10, 64)
-	if err != nil {
-		panic(err.Error())
-	}
+// func (c *userController) SaveFile(context *gin.Context) {
+// 	authHeader := context.GetHeader("Authorization")
+// 	token, err := c.jwtService.ValidateToken(authHeader)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	claims := token.Claims.(jwt.MapClaims)
+// 	id, err := strconv.ParseUint(fmt.Sprintf("%v", claims["userid"]), 10, 64)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
 
-	// File Upload
-	file, err := context.FormFile("file")
-	if err != nil {
-		res := helper.BuildErrorResponse("Failed to process request", err.Error(), helper.EmptyObj{})
-		context.AbortWithStatusJSON(http.StatusBadRequest, res)
-		return
-	}
+// 	// File Upload
+// 	file, err := context.FormFile("file")
+// 	if err != nil {
+// 		res := helper.BuildErrorResponse("Failed to process request", err.Error(), helper.EmptyObj{})
+// 		context.AbortWithStatusJSON(http.StatusBadRequest, res)
+// 		return
+// 	}
 
-	filePath, err := c.userService.SaveFile(file)
-	if err != nil {
-		res := helper.BuildErrorResponse("Failed to process request", err.Error(), helper.EmptyObj{})
-		context.AbortWithStatusJSON(http.StatusInternalServerError, res)
-		return
-	}
+// 	filePath, err := c.userService.SaveFile(file)
+// 	if err != nil {
+// 		res := helper.BuildErrorResponse("Failed to process request", err.Error(), helper.EmptyObj{})
+// 		context.AbortWithStatusJSON(http.StatusInternalServerError, res)
+// 		return
+// 	}
 
-	err = c.userService.UpdateUserProfile(id, filePath)
-	if err != nil {
-		res := helper.BuildErrorResponse("Failed to process request", err.Error(), helper.EmptyObj{})
-		context.AbortWithStatusJSON(http.StatusInternalServerError, res)
-		return
-	}
+// 	err = c.userService.UpdateUserProfile(id, filePath)
+// 	if err != nil {
+// 		res := helper.BuildErrorResponse("Failed to process request", err.Error(), helper.EmptyObj{})
+// 		context.AbortWithStatusJSON(http.StatusInternalServerError, res)
+// 		return
+// 	}
 
-	res := helper.BuildResponse(true, "OK!", filePath)
-	context.JSON(http.StatusOK, res)
-}
+// 	res := helper.BuildResponse(true, "OK!", filePath)
+// 	context.JSON(http.StatusOK, res)
+// }
 
 func (c *userController) GetFile(context *gin.Context) {
 	fileName := context.Param("file_name") // Assuming the filename is passed as a route parameter
