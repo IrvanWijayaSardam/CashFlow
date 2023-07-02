@@ -51,7 +51,7 @@ func main() {
 	{
 		userRoutes.GET("/profile", userController.Profile)
 		userRoutes.PUT("/profile", userController.Update)
-		userRoutes.POST("/picture", userController.SaveFile)
+		// userRoutes.POST("/picture", userController.SaveFile)
 	}
 
 	// cdnRoutes := r.Group("api/cdn")
